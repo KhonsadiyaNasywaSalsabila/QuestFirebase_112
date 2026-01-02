@@ -43,7 +43,30 @@ import com.example.firebase.viewmodel.StatusUiSiswa
 
 
 
+@Composable
+fun HomeBody(
+    statusUiSiswa: StatusUiSiswa,
+    onSiswaClick: (Int) -> Unit,
+    retryAction: () -> Unit,
+    modifier: Modifier = Modifier,
+){
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ){
+        when (statusUiSiswa) {
+            is StatusUiSiswa.Loading -> LoadingScreen()
+            is StatusUiSiswa.Success -> DaftarSiswa(itemSiswa = statusUiSiswa.siswa,
+                onSiswaClick = {onSiswaClick(it.id.toInt())})
 
+            is StatusUiSiswa.Error -> ErrorScreen(
+                retryAction,
+                modifier = modifier.fillMaxSize()
+            )
+        }
+    }
+
+}
 
 @Composable
 fun LoadingScreen(modifier: Modifier = Modifier) {
@@ -68,6 +91,25 @@ fun ErrorScreen(retryAction: () -> Unit, modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+fun DaftarSiswa(
+    itemSiswa : List<Siswa>,
+    onSiswaClick: (Siswa) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(
+        modifier = modifier,
+    ) {
+        items(items = itemSiswa, key = {it.id}) { person ->
+            ItemSiswa(
+                siswa = person,
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.padding_small))
+                    .clickable {onSiswaClick(person)}
+            )
+        }
+    }
+}
 
 @Composable
 fun ItemSiswa(
