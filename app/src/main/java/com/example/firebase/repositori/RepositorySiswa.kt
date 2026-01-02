@@ -8,3 +8,11 @@ interface RepositorySiswa {
     suspend fun getDataSiswa(): List<Siswa>
     suspend fun postDataSiswa(siswa: Siswa)
 }
+
+class FirebaseRepositorySiswa : RepositorySiswa {
+    private val db = FirebaseFirestore.getInstance()
+    private val collection = db.collection("siswa")
+
+    override suspend fun getDataSiswa(): List<Siswa> { return emptyList()}
+    override suspend fun postDataSiswa(siswa: Siswa){}
+}
